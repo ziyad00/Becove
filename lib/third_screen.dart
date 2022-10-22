@@ -101,12 +101,20 @@ class Home extends StatelessWidget {
                   body:
                       "Let’s open up to the thing that\nmatters amoung the people ",
                   clickbait: "Join Now",
+                  imagePath: 'MeetupIcon',
+                  color: Color(0xFFFCA311),
+                  textColor: Color(0xFF371B34),
+                  isImage: true,
                 ),
                 Card(
                   title: "Chat with us!",
                   body:
                       "Time management is the most\nimportant thing that matters\nFeel free to ask us for tips&tricks",
                   clickbait: "Watch Now",
+                  imagePath: 'MeditationIcon',
+                  color: Color(0xFFFCA311),
+                  textColor: Color(0xFF371B34),
+                  isImage: true,
                 ),
               ],
             ),
@@ -121,12 +129,19 @@ class Card extends StatelessWidget {
   final String title;
   final String body;
   final String clickbait;
-
+  final String imagePath;
+  final Color color;
+  final Color textColor;
+  final bool isImage;
   const Card({
     Key? key,
     required this.title,
     required this.body,
     required this.clickbait,
+    required this.imagePath,
+    required this.color,
+    required this.textColor,
+    required this.isImage,
   }) : super(key: key);
 
   @override
@@ -139,7 +154,7 @@ class Card extends StatelessWidget {
         color: Colors.transparent,
         child: Container(
           decoration: BoxDecoration(
-            color: Color(0xFFFCA311),
+            color: color,
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -157,7 +172,7 @@ class Card extends StatelessWidget {
                     Text(
                       "$body",
                       style: TextStyle(
-                          color: Color(0xFF371B34),
+                          color: textColor,
                           fontSize: 15,
                           fontWeight: FontWeight.w400),
                       softWrap: true,
@@ -172,7 +187,7 @@ class Card extends StatelessWidget {
                         SizedBox(
                           width: 10,
                         ),
-                        Image.asset('images/Vector.png'),
+                        isImage ? Image.asset('images/Vector.png') : Text(""),
                       ],
                     ),
                     SizedBox(
@@ -180,7 +195,7 @@ class Card extends StatelessWidget {
                     )
                   ],
                 ),
-                Image.asset('images/MeetupIcon.png'),
+                Image.asset('images/${imagePath}.png'),
               ],
             ),
           ),
