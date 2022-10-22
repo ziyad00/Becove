@@ -211,7 +211,10 @@ class _IntervalState extends State<Interval> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFF14213D),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Color(0xFF14213D),
+      ),
       width: 350,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(30, 0, 20, 0),
