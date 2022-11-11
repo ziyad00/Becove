@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Tracker extends StatelessWidget {
-  const Tracker({
+class TrackerScreen extends StatelessWidget {
+  const TrackerScreen({
     Key? key,
   }) : super(key: key);
 

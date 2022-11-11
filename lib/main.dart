@@ -1,7 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
 import 'package:flutter/material.dart';
-import 'package:tracker/third_screen.dart';
+import 'package:tracker/home/home.dart';
 
-void main() {
+void main() async {
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -11,7 +20,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    var providers = [firebase_ui_auth.EmailAuthProvider()];
     return MaterialApp(
+      initialRoute:
+          FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -25,13 +37,39 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const ThirdScreen(),
+      routes: {
+        '/sign-in': (context) {
+          return firebase_ui_auth.SignInScreen(
+            providers: providers,
+            actions: [
+              firebase_ui_auth.AuthStateChangeAction<firebase_ui_auth.SignedIn>(
+                  (context, state) {
+                Navigator.pushReplacementNamed(context, '/home');
+              }),
+            ],
+          );
+        },
+        '/profile': (context) {
+          return firebase_ui_auth.ProfileScreen(
+            providers: providers,
+            actions: [
+              firebase_ui_auth.SignedOutAction((context) {
+                Navigator.pushReplacementNamed(context, '/sign-in');
+              }),
+            ],
+          );
+        },
+        '/home': (context) {
+          return HomeScreen();
+        }
+      },
+      // home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({
+class Splash extends StatefulWidget {
+  const Splash({
     super.key,
   });
 
@@ -45,10 +83,10 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Splash> createState() => _SplashState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done

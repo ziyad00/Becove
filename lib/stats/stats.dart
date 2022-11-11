@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tracker/home/home.dart' as third_sc;
 
-class stats extends StatelessWidget {
-  const stats({
+class StatsScreen extends StatelessWidget {
+  const StatsScreen({
     Key? key,
   }) : super(key: key);
 

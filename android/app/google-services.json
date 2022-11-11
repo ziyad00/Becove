@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "215782954937",
+    "project_id": "becove-50654",
+    "storage_bucket": "becove-50654.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215782954937:android:8f1a24cc25b58a54970868",
+        "android_client_info": {
+          "package_name": "com.example.tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215782954937-hfkvuq1fuaprjgraburjta1od4cqa1c8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbYD4hzBZ3Iu4TlemYKBfh5C3cxA7Ihb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215782954937-hfkvuq1fuaprjgraburjta1od4cqa1c8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

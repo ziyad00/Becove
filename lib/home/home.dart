@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:tracker/fifth_screen.dart';
-import 'package:tracker/forth_screen.dart';
+import 'package:tracker/stats/stats.dart';
+import 'package:tracker/tracker/tracker.dart';
 
-class ThirdScreen extends StatefulWidget {
-  const ThirdScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<ThirdScreen> createState() => _ThirdScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _ThirdScreenState extends State<ThirdScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Home(),
-    Tracker(),
-    stats(),
-    Text(
-      'Index 3: Settings',
-      style: optionStyle,
-    ),
+    TrackerScreen(),
+    StatsScreen(),
+    Profile(),
   ];
 
   void _onItemTapped(int index) {
@@ -56,6 +53,19 @@ class _ThirdScreenState extends State<ThirdScreen> {
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
+    );
+  }
+}
+
+class Profile extends StatelessWidget {
+  const Profile({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'Index 3: Settings',
     );
   }
 }
