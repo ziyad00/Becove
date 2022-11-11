@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tracker/third_screen.dart' as third_sc;
+import 'package:tracker/home/home.dart' as third_sc;
 
 class stats extends StatelessWidget {
   const stats({
