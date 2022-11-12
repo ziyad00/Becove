@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     var providers = [firebase_ui_auth.EmailAuthProvider()];
     return MaterialApp(
       initialRoute:
-          FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
+          FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/home',
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.

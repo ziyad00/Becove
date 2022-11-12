@@ -1,3 +1,4 @@
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
 import 'package:flutter/material.dart';
 import 'package:tracker/stats/stats.dart';
 import 'package:tracker/tracker/tracker.dart';
@@ -10,14 +11,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static final providers = [firebase_ui_auth.EmailAuthProvider()];
+
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = <Widget>[
     Home(),
     TrackerScreen(),
     StatsScreen(),
-    Profile(),
+    firebase_ui_auth.ProfileScreen(
+      providers: providers,
+      actions: [
+        firebase_ui_auth.SignedOutAction((context) {
+          Navigator.pushReplacementNamed(context, '/sign-in');
+        }),
+      ],
+    )
+    // Profile(),
   ];
 
   void _onItemTapped(int index) {
