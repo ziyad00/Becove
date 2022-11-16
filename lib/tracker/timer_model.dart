@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tracker/tracker/abstractModel.dart';
+import 'package:tracker/common/abstractModel.dart';
 
 class TimerModel implements Model<TimerModel> {
-  final String uid;
+  final String? uid;
   final String? id;
-  final Timestamp start;
+  final Timestamp? start;
   final Timestamp? end;
-  final bool status;
+  final bool? status;
 
 //<editor-fold desc="Data Methods">
 
   const TimerModel({
     this.id,
-    required this.uid,
-    required this.start,
+    this.uid,
+    this.start,
     this.end,
-    required this.status,
+    this.status,
   });
 
   @override
