@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tracker/home/home.dart';
@@ -14,9 +15,15 @@ void main() async {
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  firebase_ui_auth.FirebaseUIAuth.configureProviders([
+    GoogleProvider(
+        clientId:
+            '215782954937-hfkvuq1fuaprjgraburjta1od4cqa1c8.apps.googleusercontent.com')
+  ]);
 
   runApp(const MyApp());
 }
@@ -27,7 +34,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    var providers = [firebase_ui_auth.EmailAuthProvider()];
+    var providers = [
+      firebase_ui_auth.EmailAuthProvider(),
+      // firebase_ui_auth.OAuthProviderButton(
+      //   provider: GoogleProvider(clientId: ''),
+      // ),
+    ];
     return MultiProvider(
       providers: [
         Provider<TrackerRepository>(
@@ -52,7 +64,12 @@ class MyApp extends StatelessWidget {
         routes: {
           '/sign-in': (context) {
             return firebase_ui_auth.SignInScreen(
-              providers: providers,
+              providers: [
+                firebase_ui_auth.EmailAuthProvider(),
+                GoogleProvider(
+                    clientId:
+                        '215782954937-hfkvuq1fuaprjgraburjta1od4cqa1c8.apps.googleusercontent.com')
+              ],
               actions: [
                 firebase_ui_auth.AuthStateChangeAction<
                     firebase_ui_auth.SignedIn>((context, state) {

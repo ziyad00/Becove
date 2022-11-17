@@ -13,10 +13,11 @@ class TrackerRepository extends Repository {
     return (await FirebaseFirestore.instance.collection('timermodel').get())
         .docs
         .map((item) => TimerModel.fromMap(item.data()))
-        .toList();
+        .toList()
+        .last;
   }
 
-  getLastEntry<T extends Model>() {
+  Stream<T> getLastEntry<T extends Model>() {
     //TODO: needs to be changed but dart can't accept abstract methods for weird reasons
     return (FirebaseFirestore.instance
         .collection(T.toString().toLowerCase())
@@ -24,8 +25,8 @@ class TrackerRepository extends Repository {
         .map((snapshot) {
       return snapshot.docs
           .map((item) => Model.fromMap<T>(item.data()))
-          .toList();
-      // .last;
+          .toList()
+          .last;
     }));
     // final x = _firestore.collection('timermodel').snapshots().map((snapshot) {
     //   return snapshot.docs.map((document) {

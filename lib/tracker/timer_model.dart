@@ -5,17 +5,17 @@ class TimerModel implements Model<TimerModel> {
   final String? uid;
   final String? id;
   final Timestamp? start;
-  final Timestamp? end;
-  final bool? status;
+  Timestamp? end;
+  bool status;
 
 //<editor-fold desc="Data Methods">
 
-  const TimerModel({
+  TimerModel({
     this.id,
     this.uid,
     this.start,
     this.end,
-    this.status,
+    required this.status,
   });
 
   @override
@@ -79,7 +79,7 @@ class TimerModel implements Model<TimerModel> {
       uid: map['uid'] as String?,
       start: map['start'] as Timestamp?,
       end: map['end'] as Timestamp?,
-      status: map['status'] as bool?,
+      status: map['status'] as bool,
     );
   }
 
