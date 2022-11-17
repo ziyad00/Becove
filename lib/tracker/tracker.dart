@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tracker/tracker/timer_model.dart';
+import 'package:tracker/tracker/tracker_repository.dart';
 
 class TrackerScreen extends StatefulWidget {
   TrackerScreen({
@@ -23,19 +25,20 @@ class _TrackerScreenState extends State<TrackerScreen> {
   }
 
   void get() async {
-    // _timer = await context.read<TrackerRepository>().getLastEntry();
+    _timer = await context.read<TrackerRepository>().getAllEntries();
+    print(_timer);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(_timer);
+    // print(_timer);
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         AppBarTrackerScreen(),
         MiddleSection(
-          timer: _timer,
-        ),
+            // timer: _timer,
+            ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
           child: ElevatedButton(

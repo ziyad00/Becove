@@ -7,12 +7,16 @@ import 'package:provider/provider.dart';
 import 'package:tracker/home/home.dart';
 import 'package:tracker/tracker/tracker_repository.dart';
 
+import 'firebase/firebase_options.dart';
+
 void main() async {
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(const MyApp());
 }
