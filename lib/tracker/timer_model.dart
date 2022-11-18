@@ -77,6 +77,7 @@ class TimerModel implements Model<TimerModel> {
   factory TimerModel.fromMap(Map<String, dynamic> map) {
     return TimerModel(
       uid: map['uid'] as String?,
+      id: map['id'] as String?,
       start: map['start'] as Timestamp?,
       end: map['end'] as Timestamp?,
       status: map['status'] as bool,

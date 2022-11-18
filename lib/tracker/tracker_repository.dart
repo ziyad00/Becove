@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tracker/common/repository.dart';
 import 'package:tracker/tracker/timer_model.dart';
 
@@ -7,17 +8,24 @@ import '../common/abstractModel.dart';
 class TrackerRepository extends Repository {
   TrackerRepository(this._firestore) : assert(_firestore != null);
   final FirebaseFirestore _firestore;
-
-  Future getAllEntries() async {
+  // future
+  Future getLastEntry() async {
+    var user = await FirebaseAuth.instance.currentUser;
+    print(user?.uid);
     //TODO: needs to be changed but dart can't accept abstract methods for weird reasons
-    return (await FirebaseFirestore.instance.collection('timermodel').get())
+    return (await FirebaseFirestore.instance
+            .collection('timermodel')
+            .where('uid', isEqualTo: user?.uid)
+            .orderBy("start", descending: false)
+            .get())
         .docs
         .map((item) => TimerModel.fromMap(item.data()))
         .toList()
         .last;
   }
 
-  Stream<T> getLastEntry<T extends Model>() {
+  // stream
+  Stream<T> getLastEntryStream<T extends Model>() {
     //TODO: needs to be changed but dart can't accept abstract methods for weird reasons
     return (FirebaseFirestore.instance
         .collection(T.toString().toLowerCase())

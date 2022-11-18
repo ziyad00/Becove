@@ -23,26 +23,27 @@ class Repository<T extends Model> {
         .collection(dataModel.runtimeType.toString().toLowerCase())
         .doc()
         .id;
-    print("isssssssss" + docID);
     data?['uid'] = user?.uid;
     data?['id'] = docID;
 
     return (await FirebaseFirestore.instance
         .collection(dataModel.runtimeType.toString().toLowerCase())
-        .add(data!));
+        .doc(docID)
+        .set(data!));
   }
 
   // updates an existing entry (missing fields won't be touched on update), document must exist
   Future updateEntryWithId<T extends Model>(T dataModel) async {
-    await FirebaseFirestore.instance
+    var _querySnapshot = await FirebaseFirestore.instance
         .collection(T.runtimeType.toString().toLowerCase())
-        .doc(dataModel.id)
-        .update(dataModel.toMap()!);
+        .where("id", isEqualTo: dataModel.id)
+        .get();
+    if (_querySnapshot.docs.isNotEmpty)
+      await _querySnapshot.docs[0].reference.update(dataModel.toMap()!);
   }
 
   // adds or updates an existing entry (missing fields will be deleted on update!), document will be created if needed
   Future addOrUpdateWithId<T extends Model>(T dataModel) async {
-    print("dddddddddddddDD" + dataModel.id.toString());
     var _querySnapshot = await FirebaseFirestore.instance
         .collection(dataModel.runtimeType.toString().toLowerCase())
         .where("id", isEqualTo: dataModel.id)
