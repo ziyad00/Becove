@@ -6,6 +6,7 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tracker/home/home.dart';
+import 'package:tracker/stats/stats_viewmodel.dart';
 import 'package:tracker/tracker/tracker_repository.dart';
 
 import 'firebase/firebase_options.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<TrackerRepository>(
             create: (_) => TrackerRepository(FirebaseFirestore.instance)),
+        Provider<StatsViewModel>(create: (_) => StatsViewModel()),
       ],
       child: MaterialApp(
         initialRoute:

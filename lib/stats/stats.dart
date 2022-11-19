@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tracker/home/home.dart' as third_sc;
+import 'package:tracker/stats/stats_viewmodel.dart';
 
 class StatsScreen extends StatelessWidget {
   const StatsScreen({
@@ -53,10 +56,31 @@ class TodaysTask extends StatelessWidget {
   }
 }
 
-class TimeSection extends StatelessWidget {
+class TimeSection extends StatefulWidget {
   const TimeSection({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<TimeSection> createState() => _TimeSectionState();
+}
+
+class _TimeSectionState extends State<TimeSection> {
+  StatsViewModel? statsViewModel;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    statsViewModel = context.read<StatsViewModel>();
+  }
+
+  void getStats(numOfDays) async {
+    statsViewModel?.calcTime(context, numOfDays);
+  }
+
+  refresh() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +95,7 @@ class TimeSection extends StatelessWidget {
               width: 10,
             ),
             Text(
-              "06:00",
+              "${statsViewModel?.time}",
               style: TextStyle(
                 color: Color(0xFFFCA311),
                 fontSize: 64,
@@ -84,7 +108,9 @@ class TimeSection extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-          child: Interval(),
+          child: Interval(
+            notifyParent: refresh,
+          ),
         ),
         TodaysFeeling(),
       ],
@@ -168,10 +194,28 @@ class Feeling extends StatelessWidget {
   }
 }
 
-class AppBar extends StatelessWidget {
+class AppBar extends StatefulWidget {
   const AppBar({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<AppBar> createState() => _AppBarState();
+}
+
+class _AppBarState extends State<AppBar> {
+  User? user = FirebaseAuth.instance.currentUser;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUser();
+  }
+
+  getUser() async {
+    // user = await FirebaseAuth.instance.currentUser;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +228,15 @@ class AppBar extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 50, 10, 0),
-          child: Image.asset('images/Ellipse 2.png'),
+          child: user != null
+              ? Image.network(
+                  user!.photoURL!,
+                  scale: 1.5,
+
+                  // placeholder: (context, url) => CircularProgressIndicator(),
+                  // errorWidget: (context, url, error) => Icon(Icons.error),
+                )
+              : CircularProgressIndicator(),
         ),
       ],
     );
@@ -192,14 +244,15 @@ class AppBar extends StatelessWidget {
 }
 
 class Interval extends StatefulWidget {
-  const Interval({super.key});
+  final Function() notifyParent;
+
+  const Interval({super.key, required this.notifyParent});
 
   @override
   State<Interval> createState() => _IntervalState();
 }
 
 class _IntervalState extends State<Interval> {
-  int? _value = 1;
   List<Text> intervals = [
     Text(
       "Today",
@@ -210,6 +263,7 @@ class _IntervalState extends State<Interval> {
   ];
   @override
   Widget build(BuildContext context) {
+    StatsViewModel statsViewModel = context.read<StatsViewModel>();
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -229,11 +283,15 @@ class _IntervalState extends State<Interval> {
                   backgroundColor: Color(0xFF14213D),
                   label: intervals[index],
                   labelStyle: TextStyle(color: Colors.white),
-                  selected: _value == index,
+                  selected: statsViewModel.interval == index,
                   onSelected: (bool selected) {
                     setState(() {
-                      _value = selected ? index : null;
+                      statsViewModel.chooseInterval(
+                          context, selected ? index : null);
+
+                      // _value = selected ? index : null;
                     });
+                    widget.notifyParent();
                   },
                 ),
               );

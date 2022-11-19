@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
 import 'package:flutter/material.dart';
 import 'package:tracker/stats/stats.dart';
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Image.asset('images/noun_users_847316 2.png'),
-            label: 'Profile',
+            label: 'Statistics',
           ),
           BottomNavigationBarItem(
             icon: Image.asset('images/settings.png'),
@@ -277,10 +278,29 @@ class SettingSection extends StatelessWidget {
   }
 }
 
-class AppBar extends StatelessWidget {
+class AppBar extends StatefulWidget {
   const AppBar({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<AppBar> createState() => _AppBarState();
+}
+
+class _AppBarState extends State<AppBar> {
+  User? user = FirebaseAuth.instance.currentUser;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUser();
+  }
+
+  getUser() async {
+    // user = FirebaseAuth.instance.currentUser;
+    print(user!.photoURL!);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -292,8 +312,16 @@ class AppBar extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(120, 50, 0, 0),
-          child: Image.asset('images/Ellipse 2.png'),
-        ),
+          child: user != null
+              ? Image.network(
+                  user!.photoURL!,
+                  scale: 1.2,
+
+                  // placeholder: (context, url) => CircularProgressIndicator(),
+                  // errorWidget: (context, url, error) => Icon(Icons.error),
+                )
+              : CircularProgressIndicator(),
+        )
       ],
     );
   }
