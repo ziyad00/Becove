@@ -1,54 +1,96 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tracker/tracker/models/timer.dart';
 import 'package:tracker/tracker/tracker_repository.dart';
 
-class StatsViewModel {
+class StatsViewModel extends ChangeNotifier {
   int? calculatedTime;
   int interval = 1;
-  String time = "00:00";
-  void chooseInterval(BuildContext context, int? index) {
+  bool isFirst = true;
+  String? time = "00:00";
+  void chooseInterval(int? index) {
     if (index != null) {
       interval = index;
       if (interval == 0) {
-        calcTime(context, 1);
+        calcTime(1);
+        notifyListeners();
       } else if (interval == 1) {
-        calcTime(context, 7);
+        calcTime(7);
+        notifyListeners();
       } else if (interval == 2) {
-        calcTime(context, 30);
+        calcTime(30);
+        notifyListeners();
       }
     }
+    notifyListeners();
   }
 
-  void calcTime(BuildContext context, int numOfDays) async {
-    // calculatedTime = 0;
-    // int totalSeconds = 0;
-    // List<TimerModel>? timers = await context
-    //     .read<TrackerRepository>()
-    //     .getAllEntriesBasedOnDate<TimerModel>('timermodel', numOfDays);
+  String chooseIntervalBegining(int? index, timers) {
+    if (index != null) {
+      interval = index;
+      if (interval == 0) {
+        return calcTimeBegining(1, timers);
+      } else if (interval == 1) {
+        return calcTimeBegining(7, timers);
+      } else if (interval == 2) {
+        return calcTimeBegining(30, timers);
+      }
+    }
+    return "00:00:00";
+    notifyListeners();
+  }
 
-    // timers?.forEach((TimerModel timer) {
-    //   totalSeconds += Timestamp.now().seconds - timer.start!.seconds;
-    // });
-    // calculatedTime = totalSeconds;
-    // print(totalSeconds);
-    // time = getDateInForm(calculatedTime);
+  String calcTimeBegining(int numOfDays, timers) {
+    calculatedTime = 0;
+    int totalSeconds = 0;
+    isFirst = false;
+
+    timers?.forEach((Timer timer) {
+      if (timer.end != null)
+        totalSeconds += timer.end!.seconds - timer.start!.seconds;
+    });
+    calculatedTime = totalSeconds;
+    print(totalSeconds);
+    final timeInFormat = getDateInForm(calculatedTime);
+    return timeInFormat;
+  }
+
+  void calcTime(int numOfDays) async {
+    calculatedTime = 0;
+    int totalSeconds = 0;
+    List<Timer>? timers =
+        await TrackerRepository().getAllEntriesBasedOnDate(numOfDays);
+
+    timers?.forEach((Timer timer) {
+      if (timer.end != null)
+        totalSeconds += timer.end!.seconds - timer.start!.seconds;
+    });
+    calculatedTime = totalSeconds;
+    print(totalSeconds);
+    time = getDateInForm(calculatedTime);
+    notifyListeners();
   }
 
   String getDateInForm(seconds) {
-    var current = seconds;
-    var minutes = ((current % 3600) / 60).floor();
+    int sec = seconds % 60;
+    int min = (sec / 60).floor();
+    int hour = (min / 60).floor();
+    String hours = hour.toString().length <= 1 ? "0$hour" : "$hour";
 
-    var hours = (seconds / 3600).floor();
-    var days = (hours / 24).floor();
+    String minute = min.toString().length <= 1 ? "0$min" : "$min";
+    String second = sec.toString().length <= 1 ? "0$sec" : "$sec";
+    final d = Duration(seconds: seconds).toString().substring(0, 7);
 
-    var seconds2 = current % 60;
-
-    if (hours == 0) {
-      return "${minutes}: ${seconds}";
-    } else {
-      return "${hours}";
-    }
+    return d;
+    notifyListeners();
   }
 }
+
+final StatsViewModelProvider = ChangeNotifierProvider<StatsViewModel>((ref) {
+  return StatsViewModel();
+});
+
+final timersForStats = FutureProvider<List<Timer>>((ref) async {
+  return TrackerRepository().getAllEntriesBasedOnDate(1);
+});

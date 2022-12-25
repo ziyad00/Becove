@@ -1,16 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:tracker/home/home.dart' as third_sc;
 import 'package:tracker/stats/stats_viewmodel.dart';
 
-class StatsScreen extends StatelessWidget {
+import '../tracker/models/timer.dart';
+
+class StatsScreen extends ConsumerWidget {
   const StatsScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsViewModel = ref.watch(StatsViewModelProvider);
+
     return Column(
       children: [
         AppBar(),
@@ -56,65 +61,47 @@ class TodaysTask extends StatelessWidget {
   }
 }
 
-class TimeSection extends StatefulWidget {
-  const TimeSection({
-    Key? key,
-  }) : super(key: key);
-
+class TimeSection extends ConsumerWidget {
   @override
-  State<TimeSection> createState() => _TimeSectionState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsViewModel = ref.watch(StatsViewModelProvider);
+    // statsViewModel.chooseInterval(1);
+    AsyncValue<List<Timer>> timers = ref.watch(timersForStats);
 
-class _TimeSectionState extends State<TimeSection> {
-  StatsViewModel? statsViewModel;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    statsViewModel = context.read<StatsViewModel>();
-    // statsViewModel?.chooseInterval(context, 1);
-  }
-
-  void getStats(numOfDays) async {
-    statsViewModel?.calcTime(context, numOfDays);
-  }
-
-  refresh() {
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+    return timers.when(
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => Text('Error: $err'),
+      data: (data) {
+        return Column(
           children: [
-            Image.asset('images/Frame.png'),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('images/Frame.png'),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "${statsViewModel.isFirst != true ? statsViewModel.time : statsViewModel.calcTimeBegining(1, data)} ",
+                  style: TextStyle(
+                    color: Color(0xFFFCA311),
+                    fontSize: 64,
+                  ),
+                ),
+              ],
+            ),
             SizedBox(
-              width: 10,
+              height: 25,
             ),
-            Text(
-              "${statsViewModel?.time}",
-              style: TextStyle(
-                color: Color(0xFFFCA311),
-                fontSize: 64,
-              ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+              child: Interval(),
             ),
+            TodaysFeeling(),
           ],
-        ),
-        SizedBox(
-          height: 25,
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-          child: Interval(
-            notifyParent: refresh,
-          ),
-        ),
-        TodaysFeeling(),
-      ],
+        );
+      },
     );
   }
 }
@@ -195,31 +182,13 @@ class Feeling extends StatelessWidget {
   }
 }
 
-class AppBar extends StatefulWidget {
-  const AppBar({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<AppBar> createState() => _AppBarState();
-}
-
-class _AppBarState extends State<AppBar> {
+class AppBar extends ConsumerWidget {
   User? user = FirebaseAuth.instance.currentUser;
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getUser();
-  }
-
-  getUser() async {
-    // user = await FirebaseAuth.instance.currentUser;
-    setState(() {});
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsViewModel = ref.watch(StatsViewModelProvider);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -244,16 +213,7 @@ class _AppBarState extends State<AppBar> {
   }
 }
 
-class Interval extends StatefulWidget {
-  final Function() notifyParent;
-
-  const Interval({super.key, required this.notifyParent});
-
-  @override
-  State<Interval> createState() => _IntervalState();
-}
-
-class _IntervalState extends State<Interval> {
+class Interval extends ConsumerWidget {
   List<Text> intervals = [
     Text(
       "Today",
@@ -263,8 +223,9 @@ class _IntervalState extends State<Interval> {
     Text("30 Days")
   ];
   @override
-  Widget build(BuildContext context) {
-    StatsViewModel statsViewModel = context.read<StatsViewModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsViewModel = ref.watch(StatsViewModelProvider);
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -286,13 +247,7 @@ class _IntervalState extends State<Interval> {
                   labelStyle: TextStyle(color: Colors.white),
                   selected: statsViewModel.interval == index,
                   onSelected: (bool selected) {
-                    setState(() {
-                      statsViewModel.chooseInterval(
-                          context, selected ? index : null);
-
-                      // _value = selected ? index : null;
-                    });
-                    widget.notifyParent();
+                    statsViewModel.chooseInterval(selected ? index : null);
                   },
                 ),
               );

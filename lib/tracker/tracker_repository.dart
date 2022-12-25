@@ -24,18 +24,17 @@ class TrackerRepository {
         .last;
   }
 
-  Future getAllEntriesBasedOnDate<T extends Model>(
-      String collection, int numOfDays) async {
+  Future<List<Timer>> getAllEntriesBasedOnDate(int numOfDays) async {
     int seconds = numOfDays * 86400;
     User? user = await FirebaseAuth.instance.currentUser;
     return (await FirebaseFirestore.instance
-            .collection(collection)
+            .collection(collectionName)
             .where('uid', isEqualTo: user?.uid)
             .where('start',
                 isGreaterThan: Timestamp(Timestamp.now().seconds - seconds, 0))
             .get())
         .docs
-        .map((item) => Model.fromMap<T>(item.data()))
+        .map((item) => Timer.fromMap(item.data()))
         .toList();
   }
 
@@ -43,6 +42,8 @@ class TrackerRepository {
   Stream<Timer> getLastEntryStream() {
     return (FirebaseFirestore.instance
         .collection(collectionName)
+        .where('uid', isEqualTo: user?.uid)
+        .orderBy("start", descending: false)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
@@ -60,8 +61,8 @@ class TrackerRepository {
         .id;
     dataModel = dataModel.copyWith(uid: user?.uid);
     dataModel = dataModel.copyWith(id: docID);
-
-    (await FirebaseFirestore.instance
+    print(dataModel);
+    final x = (await FirebaseFirestore.instance
         // .collection(dataModel.toString().toLowerCase())
         .collection(collectionName)
         .add(dataModel.toMap()));
@@ -72,6 +73,7 @@ class TrackerRepository {
   }
 
   Future updateEntryWithId(Timer dataModel) async {
+    print(dataModel);
     var _querySnapshot = await FirebaseFirestore.instance
         .collection(collectionName)
         .where("id", isEqualTo: dataModel.id)
