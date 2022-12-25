@@ -72,6 +72,7 @@ class _TimeSectionState extends State<TimeSection> {
     // TODO: implement initState
     super.initState();
     statsViewModel = context.read<StatsViewModel>();
+    // statsViewModel?.chooseInterval(context, 1);
   }
 
   void getStats(numOfDays) async {

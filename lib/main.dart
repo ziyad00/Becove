@@ -4,11 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:provider/provider.dart';
 import 'package:tracker/home/home.dart';
 import 'package:tracker/stats/stats_viewmodel.dart';
 import 'package:tracker/tracker/tracker_repository.dart';
-
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
 import 'firebase/firebase_options.dart';
 
 void main() async {
@@ -43,11 +45,11 @@ class MyApp extends StatelessWidget {
     ];
     return MultiProvider(
       providers: [
-        Provider<TrackerRepository>(
-            create: (_) => TrackerRepository(FirebaseFirestore.instance)),
+        Provider<TrackerRepository>(create: (_) => TrackerRepository()),
         Provider<StatsViewModel>(create: (_) => StatsViewModel()),
       ],
-      child: MaterialApp(
+      child: riverpod.ProviderScope(
+          child: MaterialApp(
         initialRoute:
             FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/home',
         title: 'Flutter Demo',
@@ -95,7 +97,7 @@ class MyApp extends StatelessWidget {
           }
         },
         // home: const MyHomePage(),
-      ),
+      )),
     );
   }
 }

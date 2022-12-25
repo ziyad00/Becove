@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tracker/tracker/timer_model.dart';
+import 'package:tracker/tracker/models/timer.dart';
 import 'package:tracker/tracker/tracker_repository.dart';
 
 class StatsViewModel {
@@ -21,18 +22,18 @@ class StatsViewModel {
   }
 
   void calcTime(BuildContext context, int numOfDays) async {
-    calculatedTime = 0;
-    int totalSeconds = 0;
-    List<TimerModel>? timers = await context
-        .read<TrackerRepository>()
-        .getAllEntriesBasedOnDate<TimerModel>('timermodel', numOfDays);
+    // calculatedTime = 0;
+    // int totalSeconds = 0;
+    // List<TimerModel>? timers = await context
+    //     .read<TrackerRepository>()
+    //     .getAllEntriesBasedOnDate<TimerModel>('timermodel', numOfDays);
 
-    timers?.forEach((TimerModel timer) {
-      totalSeconds += timer.start!.seconds;
-    });
-    calculatedTime = totalSeconds;
-    print(totalSeconds);
-    time = getDateInForm(calculatedTime);
+    // timers?.forEach((TimerModel timer) {
+    //   totalSeconds += Timestamp.now().seconds - timer.start!.seconds;
+    // });
+    // calculatedTime = totalSeconds;
+    // print(totalSeconds);
+    // time = getDateInForm(calculatedTime);
   }
 
   String getDateInForm(seconds) {
@@ -45,7 +46,7 @@ class StatsViewModel {
     var seconds2 = current % 60;
 
     if (hours == 0) {
-      return "${hours}";
+      return "${minutes}: ${seconds}";
     } else {
       return "${hours}";
     }
