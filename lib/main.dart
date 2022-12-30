@@ -6,9 +6,13 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:provider/provider.dart';
-import 'package:tracker/home/home.dart';
-import 'package:tracker/stats/stats_viewmodel.dart';
-import 'package:tracker/tracker/tracker_repository.dart';
+import 'package:tracker/constants/colors.dart';
+import 'package:tracker/features/home/home.dart';
+import 'package:tracker/features/previous_timers/previous_timer.dart';
+import 'package:tracker/features/stats/stats.dart';
+import 'package:tracker/features/stats/stats_viewmodel.dart';
+import 'package:tracker/features/tracker/tracker.dart';
+import 'package:tracker/features/tracker/tracker_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 import 'firebase/firebase_options.dart';
@@ -43,6 +47,7 @@ class MyApp extends StatelessWidget {
       //   provider: GoogleProvider(clientId: ''),
       // ),
     ];
+
     return MultiProvider(
       providers: [
         Provider<TrackerRepository>(create: (_) => TrackerRepository()),
@@ -64,9 +69,14 @@ class MyApp extends StatelessWidget {
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
           primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         routes: {
           '/sign-in': (context) {
+            // TODO: Test it
+            if (FirebaseAuth.instance.currentUser != null) {
+              Navigator.pushReplacementNamed(context, '/home');
+            }
             return firebase_ui_auth.SignInScreen(
               providers: [
                 firebase_ui_auth.EmailAuthProvider(),
@@ -94,7 +104,16 @@ class MyApp extends StatelessWidget {
           },
           '/home': (context) {
             return HomeScreen();
-          }
+          },
+          '/tracker': (context) {
+            return TrackerScreen();
+          },
+          '/stats': (context) {
+            return StatsScreen();
+          },
+          '/previous_timers': (context) {
+            return PreviousTimersScreen();
+          },
         },
         // home: const MyHomePage(),
       )),
@@ -130,7 +149,7 @@ class _SplashState extends State<Splash> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      backgroundColor: Color(0xFF14213D),
+      backgroundColor: darkBlue,
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tracker/constants/colors.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -7,7 +8,7 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF14213D),
+      backgroundColor: darkBlue,
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -30,13 +31,13 @@ class AuthScreen extends StatelessWidget {
             onPressed: () {},
             child: Text("Sign  in with Apple"),
             style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFFCA311), minimumSize: Size(200, 40)),
+                backgroundColor: orangeYellow, minimumSize: Size(200, 40)),
           ),
           ElevatedButton(
             onPressed: () {},
             child: Text("Sign  in with Google"),
             style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFFCA311), minimumSize: Size(200, 40)),
+                backgroundColor: orangeYellow, minimumSize: Size(200, 40)),
           ),
         ],
       )),

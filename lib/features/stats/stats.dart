@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
-import 'package:tracker/home/home.dart' as third_sc;
-import 'package:tracker/stats/stats_viewmodel.dart';
+import 'package:tracker/constants/colors.dart';
+import 'package:tracker/features/home/home.dart' as third_sc;
+import 'package:tracker/features/stats/stats_viewmodel.dart';
 
 import '../tracker/models/timer.dart';
 
@@ -16,12 +17,34 @@ class StatsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final statsViewModel = ref.watch(StatsViewModelProvider);
 
-    return Column(
-      children: [
-        AppBar(),
-        TimeSection(),
-        TodaysTask(),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Statistics"),
+        backgroundColor: darkBlue,
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
+        ),
+      ),
+      body: Container(
+        // decoration: BoxDecoration(
+        //     gradient: LinearGradient(
+        //   begin: Alignment.topRight,
+        //   end: Alignment.bottomLeft,
+        //   colors: [
+        //     Colors.blue,
+        //     Colors.red,
+        //   ],
+        // )),
+        child: ListView(
+          children: [
+            SizedBox(
+              height: 25,
+            ),
+            TimeSection(),
+            TodaysTask(),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -43,7 +66,7 @@ class TodaysTask extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20, bottom: 20),
           child: Text(
             "Today's Task",
-            style: TextStyle(color: Color(0xFF371B34), fontSize: 22),
+            style: TextStyle(color: lightBlue, fontSize: 22),
           ),
         ),
         third_sc.Card(
@@ -52,9 +75,10 @@ class TodaysTask extends StatelessWidget {
               "Aura is the most important thing\nthat matters to you.join us on",
           clickbait: "",
           imagePath: 'MeetupIcon',
-          color: Color(0xFF14213D),
+          color: darkBlue,
           textColor: Colors.white,
           isImage: false,
+          screen: "",
         ),
       ],
     );
@@ -123,7 +147,7 @@ class TodaysFeeling extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20, bottom: 20),
           child: Text(
             "How are you feeling today ?",
-            style: TextStyle(color: Color(0xFF371B34), fontSize: 22),
+            style: TextStyle(color: textBlue, fontSize: 22),
           ),
         ),
         Row(
@@ -182,7 +206,7 @@ class Feeling extends StatelessWidget {
   }
 }
 
-class AppBar extends ConsumerWidget {
+class CustomAppBar extends ConsumerWidget {
   User? user = FirebaseAuth.instance.currentUser;
   @override
   @override
@@ -192,10 +216,7 @@ class AppBar extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(10, 50, 0, 0),
-          child: Image.asset('images/Hamburger.png'),
-        ),
+        SizedBox(),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 50, 10, 0),
           child: user != null
@@ -229,7 +250,7 @@ class Interval extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Color(0xFF14213D),
+        color: darkBlue,
       ),
       width: 350,
       child: Padding(
@@ -241,8 +262,8 @@ class Interval extends ConsumerWidget {
               return Padding(
                 padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
                 child: ChoiceChip(
-                  selectedColor: Color(0xFFFCA311),
-                  backgroundColor: Color(0xFF14213D),
+                  selectedColor: orangeYellow,
+                  backgroundColor: lightBlue,
                   label: intervals[index],
                   labelStyle: TextStyle(color: Colors.white),
                   selected: statsViewModel.interval == index,

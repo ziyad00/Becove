@@ -2,29 +2,43 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tracker/tracker/models/timer.dart';
-import 'package:tracker/tracker/tracker_repository.dart';
+import 'package:tracker/constants/colors.dart';
+import 'package:tracker/features/tracker/models/timer.dart';
+import 'package:tracker/features/tracker/tracker_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tracker/tracker/viewmodel.dart';
+import 'package:tracker/features/tracker/viewmodel.dart';
 
 class TrackerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        AppBarTrackerScreen(),
-        MiddleSection(),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-          child: ElevatedButton(
-            onPressed: () {},
-            child: Text("End Session"),
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF14213D), minimumSize: Size(350, 50)),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Track Time"),
+        backgroundColor: darkBlue,
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
         ),
-      ],
+      ),
+      body: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // AppBarTrackerScreen(),
+            SizedBox(),
+            Center(child: MiddleSection()),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text("End Session"),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF14213D),
+                    minimumSize: Size(350, 50)),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -63,14 +77,13 @@ class MiddleSection extends ConsumerWidget {
             children: [
               timer.status!
                   ? StreamBuilder(
-                      initialData: "loading",
+                      initialData: "",
                       stream: calcTimerPeriodically(timer.start!.toDate()),
                       builder: (context, snapshot) {
                         return Text(
                           "${snapshot.data.toString()}",
                           textAlign: TextAlign.center,
-                          style:
-                              TextStyle(fontSize: 40, color: Color(0xFF371B34)),
+                          style: TextStyle(fontSize: 40, color: textBlue),
                         );
                       },
                     )
@@ -84,7 +97,7 @@ class MiddleSection extends ConsumerWidget {
               // ),
               Text(
                 "Start Timer",
-                style: TextStyle(fontSize: 30, color: Color(0xFF371B34)),
+                style: TextStyle(fontSize: 30, color: darkBlue),
               ),
               SizedBox(
                 height: 10,
@@ -143,7 +156,7 @@ class MiddleSection extends ConsumerWidget {
                     // ),
                     Text(
                       "Start Timer",
-                      style: TextStyle(fontSize: 30, color: Color(0xFF371B34)),
+                      style: TextStyle(fontSize: 30, color: textBlue),
                     ),
                     SizedBox(
                       height: 10,

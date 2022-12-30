@@ -1,4 +1,4 @@
-import 'package:tracker/tracker/models/timer.dart';
+import 'package:tracker/features/tracker/models/timer.dart';
 
 abstract class Model<T> {
   abstract final String? id;

@@ -49,6 +49,7 @@ dependencies:
   json_annotation: ^4.7.0
   freezed: ^2.3.2
   flutter_riverpod: ^2.1.2
+  gradient_app_bar: ^0.1.3
 
 dev_dependencies:
   flutter_test:

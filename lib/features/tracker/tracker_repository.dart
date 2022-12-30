@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tracker/common/repository.dart';
-import 'package:tracker/tracker/models/timer.dart';
+import 'package:tracker/features/tracker/models/timer.dart';
 
-import '../common/abstractModel.dart';
+import '../../common/abstractModel.dart';
 
 class TrackerRepository {
   final collectionName = "timers";
@@ -50,6 +50,18 @@ class TrackerRepository {
           .map((doc) => Timer.fromMap(doc.data()))
           .toList()
           .last;
+    }));
+  }
+
+  // stream
+  Stream<List<Timer>> getAllEntryStream() {
+    return (FirebaseFirestore.instance
+        .collection(collectionName)
+        .where('uid', isEqualTo: user?.uid)
+        .orderBy("start", descending: false)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Timer.fromMap(doc.data())).toList();
     }));
   }
 

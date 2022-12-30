@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tracker/tracker/models/timer.dart';
-import 'package:tracker/tracker/tracker_repository.dart';
+import 'package:tracker/features/tracker/models/timer.dart';
+import 'package:tracker/features/tracker/tracker_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TrackerViewModel extends ChangeNotifier {
