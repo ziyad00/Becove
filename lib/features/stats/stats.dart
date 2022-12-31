@@ -77,7 +77,7 @@ class TodaysTask extends StatelessWidget {
           imagePath: 'MeetupIcon',
           color: darkBlue,
           textColor: Colors.white,
-          isImage: false,
+          isImage: true,
           screen: "",
         ),
       ],

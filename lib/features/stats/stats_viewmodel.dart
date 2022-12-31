@@ -6,7 +6,7 @@ import 'package:tracker/features/tracker/tracker_repository.dart';
 
 class StatsViewModel extends ChangeNotifier {
   int? calculatedTime;
-  int interval = 1;
+  int interval = 0;
   bool isFirst = true;
   String? time = "00:00";
   void chooseInterval(int? index) {

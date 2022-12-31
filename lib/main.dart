@@ -16,6 +16,7 @@ import 'package:tracker/features/tracker/tracker_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 import 'firebase/firebase_options.dart';
+import 'package:calendar_view/calendar_view.dart';
 
 void main() async {
   // await Firebase.initializeApp(
@@ -54,69 +55,70 @@ class MyApp extends StatelessWidget {
         Provider<StatsViewModel>(create: (_) => StatsViewModel()),
       ],
       child: riverpod.ProviderScope(
-          child: MaterialApp(
-        initialRoute:
-            FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/home',
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+        child: MaterialApp(
+          initialRoute:
+              FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/home',
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            // This is the theme of your application.
+            //
+            // Try running your application with "flutter run". You'll see the
+            // application has a blue toolbar. Then, without quitting the app, try
+            // changing the primarySwatch below to Colors.green and then invoke
+            // "hot reload" (press "r" in the console where you ran "flutter run",
+            // or simply save your changes to "hot reload" in a Flutter IDE).
+            // Notice that the counter didn't reset back to zero; the application
+            // is not restarted.
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          routes: {
+            '/sign-in': (context) {
+              // TODO: Test it
+              if (FirebaseAuth.instance.currentUser != null) {
+                Navigator.pushReplacementNamed(context, '/home');
+              }
+              return firebase_ui_auth.SignInScreen(
+                providers: [
+                  firebase_ui_auth.EmailAuthProvider(),
+                  GoogleProvider(
+                      clientId:
+                          '215782954937-hfkvuq1fuaprjgraburjta1od4cqa1c8.apps.googleusercontent.com')
+                ],
+                actions: [
+                  firebase_ui_auth.AuthStateChangeAction<
+                      firebase_ui_auth.SignedIn>((context, state) {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  }),
+                ],
+              );
+            },
+            '/profile': (context) {
+              return firebase_ui_auth.ProfileScreen(
+                providers: providers,
+                actions: [
+                  firebase_ui_auth.SignedOutAction((context) {
+                    Navigator.pushReplacementNamed(context, '/sign-in');
+                  }),
+                ],
+              );
+            },
+            '/home': (context) {
+              return HomeScreen();
+            },
+            '/tracker': (context) {
+              return TrackerScreen();
+            },
+            '/stats': (context) {
+              return StatsScreen();
+            },
+            '/previous_timers': (context) {
+              return PreviousTimersScreen();
+            },
+          },
+          // home: const MyHomePage(),
         ),
-        routes: {
-          '/sign-in': (context) {
-            // TODO: Test it
-            if (FirebaseAuth.instance.currentUser != null) {
-              Navigator.pushReplacementNamed(context, '/home');
-            }
-            return firebase_ui_auth.SignInScreen(
-              providers: [
-                firebase_ui_auth.EmailAuthProvider(),
-                GoogleProvider(
-                    clientId:
-                        '215782954937-hfkvuq1fuaprjgraburjta1od4cqa1c8.apps.googleusercontent.com')
-              ],
-              actions: [
-                firebase_ui_auth.AuthStateChangeAction<
-                    firebase_ui_auth.SignedIn>((context, state) {
-                  Navigator.pushReplacementNamed(context, '/home');
-                }),
-              ],
-            );
-          },
-          '/profile': (context) {
-            return firebase_ui_auth.ProfileScreen(
-              providers: providers,
-              actions: [
-                firebase_ui_auth.SignedOutAction((context) {
-                  Navigator.pushReplacementNamed(context, '/sign-in');
-                }),
-              ],
-            );
-          },
-          '/home': (context) {
-            return HomeScreen();
-          },
-          '/tracker': (context) {
-            return TrackerScreen();
-          },
-          '/stats': (context) {
-            return StatsScreen();
-          },
-          '/previous_timers': (context) {
-            return PreviousTimersScreen();
-          },
-        },
-        // home: const MyHomePage(),
-      )),
+      ),
     );
   }
 }

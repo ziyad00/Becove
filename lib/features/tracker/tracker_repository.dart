@@ -43,7 +43,7 @@ class TrackerRepository {
     return (FirebaseFirestore.instance
         .collection(collectionName)
         .where('uid', isEqualTo: user?.uid)
-        .orderBy("start", descending: false)
+        .orderBy("start", descending: true)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
@@ -53,12 +53,25 @@ class TrackerRepository {
     }));
   }
 
+  Future<List<Timer>> getAllEntries() async {
+    //TODO: needs to be changed but dart can't accept abstract methods for weird reasons
+    User? user = await FirebaseAuth.instance.currentUser;
+    return (await FirebaseFirestore.instance
+            .collection(collectionName)
+            .where('uid', isEqualTo: user?.uid)
+            .orderBy("start", descending: true)
+            .get())
+        .docs
+        .map((doc) => Timer.fromMap(doc.data()))
+        .toList();
+  }
+
   // stream
   Stream<List<Timer>> getAllEntryStream() {
     return (FirebaseFirestore.instance
         .collection(collectionName)
         .where('uid', isEqualTo: user?.uid)
-        .orderBy("start", descending: false)
+        .orderBy("start", descending: true)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) => Timer.fromMap(doc.data())).toList();

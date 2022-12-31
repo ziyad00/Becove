@@ -16,8 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static final providers = [firebase_ui_auth.EmailAuthProvider()];
 
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
   static List<Widget> _widgetOptions = <Widget>[
     Home(),
     // TrackerScreen(),
@@ -50,27 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Container(
-        // decoration: BoxDecoration(
-        //     gradient: LinearGradient(
-        //   begin: Alignment.topRight,
-        //   end: Alignment.bottomLeft,
-        //   colors: [
-        //     Colors.blue,
-        //     Colors.red,
-        //   ],
-        // )),
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: Container(
-        // decoration: BoxDecoration(
-        //     gradient: LinearGradient(
-        //   begin: Alignment.topRight,
-        //   end: Alignment.bottomLeft,
-        //   colors: [
-        //     Colors.red,
-        //     Colors.blue,
-        //   ],
-        // )),
         child: BottomNavigationBar(
           // backgroundColor: Color.fromARGB(255, 80, 31, 31),
           items: <BottomNavigationBarItem>[
@@ -175,6 +156,7 @@ class Card extends StatelessWidget {
   final Color textColor;
   final bool isImage;
   final String screen;
+  final bool isImage2 = false;
   const Card({
     Key? key,
     required this.title,
@@ -185,6 +167,7 @@ class Card extends StatelessWidget {
     required this.textColor,
     required this.isImage,
     required this.screen,
+    bool? isImage2,
   }) : super(key: key);
 
   @override
@@ -234,7 +217,9 @@ class Card extends StatelessWidget {
                           SizedBox(
                             width: 10,
                           ),
-                          isImage ? Image.asset('images/Vector.png') : Text(""),
+                          isImage2
+                              ? Image.asset('images/Vector.png')
+                              : Text(""),
                         ],
                       ),
                       SizedBox(
@@ -242,7 +227,7 @@ class Card extends StatelessWidget {
                       )
                     ],
                   ),
-                  Image.asset('images/${imagePath}.png'),
+                  isImage ? Image.asset('images/${imagePath}.png') : Text(""),
                 ],
               ),
             ),
